@@ -5,12 +5,12 @@ const express = require('express');
 const formData = require('express-form-data');
 require('dotenv').config();
 
-// const router = require('./router');
 const mongodbConnection = require('./database/config/mongodbConnection');
 
 const PORT = process.env.PORT || 5000;
 const app = express();
 mongodbConnection();
+
 
 app.set('port', PORT);
 
@@ -19,7 +19,6 @@ app.use(formData.parse());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(join(__dirname, '..', 'client', 'build')));
-// app.use('/api/v1', router);
 
 app.get('*', (req, res) => {
   res.sendFile(join(__dirname, '..', 'client', 'build', 'index.html'));
