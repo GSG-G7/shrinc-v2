@@ -5,12 +5,8 @@ const express = require('express');
 const formData = require('express-form-data');
 require('dotenv').config();
 
-const mongodbConnection = require('./database/config/mongodbConnection');
-
 const PORT = process.env.PORT || 5000;
 const app = express();
-mongodbConnection();
-
 
 app.set('port', PORT);
 
