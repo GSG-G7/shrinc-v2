@@ -35,10 +35,17 @@ const therapistType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: 'therapistQuery',
   fields: {
-    therapists: {
+    therapist: {
       type: therapistType,
+      args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return TherapistSchema.findById(args.id);
+      },
+    },
+    therapists: {
+      type: new GraphQLList(therapistType),
+      resolve() {
+        return TherapistSchema.find({});
       },
     },
   },
