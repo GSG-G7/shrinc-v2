@@ -1,4 +1,5 @@
 const graphql = require('graphql');
+const TherapistSchema = require('../database/config/therapistSchema');
 
 const {
   GraphQLObjectType,
@@ -36,9 +37,9 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     therapists: {
       type: therapistType,
-    //   resolve(parent, args) {
-    //     // return Therapists
-    //   },
+      resolve(parent, args) {
+        return TherapistSchema.findById(args.id);
+      },
     },
   },
 });
@@ -65,10 +66,25 @@ const Mutation = new GraphQLObjectType({
         remote: { type: new GraphQLNonNull(GraphQLBoolean) },
         skype: { type: GraphQLString },
       },
-    //   resolve(parent, args) {
-    //     // make some functions(password hashing, host image by Cloudinary) on data
-    //     //  save data (therapist account) in MongoDB
-    //   },
+      resolve(parent, args) {
+        const therapist = new TherapistSchema({
+          fullName: args.fullName,
+          email: args.email,
+          password: args.password,
+          city: args.city,
+          postCode: args.postCode,
+          type: args.type,
+          priceRange: args.priceRange,
+          language: args.language,
+          insurance: args.insurance,
+          approch: args.approch,
+          avalibility: args.avalibility,
+          image: args.image,
+          remote: args.remote,
+          skype: args.skype,
+        });
+        return therapist.save();
+      },
     },
   },
 });
