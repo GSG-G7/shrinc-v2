@@ -18,7 +18,7 @@ app.use(formData.parse());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(join(__dirname, '..', 'client', 'build')));
-app.use('/graphql', graphqlHTTP({
+app.use('/shrinc', graphqlHTTP({
   schema,
   graphiql: true,
 }));

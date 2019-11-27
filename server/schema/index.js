@@ -26,7 +26,7 @@ const therapistType = new GraphQLObjectType({
     approch: { type: new GraphQLNonNull(GraphQLString) },
     avalibility: { type: new GraphQLNonNull(GraphQLString) },
     image: { type: new GraphQLNonNull(GraphQLString) },
-    remote: { type: GraphQLBoolean },
+    remote: { type: new GraphQLNonNull(GraphQLBoolean) },
     skype: { type: GraphQLString },
   }),
 });
@@ -62,7 +62,7 @@ const Mutation = new GraphQLObjectType({
         approch: { type: new GraphQLNonNull(GraphQLString) },
         avalibility: { type: new GraphQLNonNull(GraphQLString) },
         image: { type: new GraphQLNonNull(GraphQLString) },
-        remote: { type: GraphQLBoolean },
+        remote: { type: new GraphQLNonNull(GraphQLBoolean) },
         skype: { type: GraphQLString },
       },
     //   resolve(parent, args) {
