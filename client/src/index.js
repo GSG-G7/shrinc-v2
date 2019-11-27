@@ -1,6 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
 
 import App from './components/App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const client = new ApolloClient({
+  uri: 'https://localhost:5000/shrinc',
+});
+
+const ProviderSetUp = () => 
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>
+);
+  
+
+ReactDOM.render(<ProviderSetUp />, document.getElementById('root'));
