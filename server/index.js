@@ -3,9 +3,12 @@ const mongodbConnection = require('./database/config/mongodbConnection');
 
 const port = app.get('port');
 
-mongodbConnection().then(() => {
-  app.listen(port, () => {
+mongodbConnection()
+  .then(() => {
     // eslint-disable-next-line no-console
-    console.log(`server is running at http://localhost:${port}`);
+    console.log('MongoDB is connected');
+    app.listen(port, () => {
+      // eslint-disable-next-line no-console
+      console.log(`server is running at http://localhost:${port}`);
+    });
   });
-});
