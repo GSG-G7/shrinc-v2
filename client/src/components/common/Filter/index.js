@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
+import { graphql } from 'react-apollo';
 import { Select, Form, Button, Switch, notification } from 'antd';
 
+import getCities from '../../query';
 import Loader from '../Loader';
 import { types, ranges } from './staticData';
 import './style.css';
@@ -15,9 +18,17 @@ class Filter extends Component {
   };
 
   componentDidMount = async () => {
-    const result = await axios.get('/api/v1/cities');
-    const availableCities = result.data.data;
-    this.setState({ cities: availableCities });
+    // when data is reseved
+    const {
+      data,
+      data: { loading },
+    } = this.props;
+    if (!loading) {
+      // this.setState({ cities: availableCities });
+    }
+    // will removed
+    // const result = await axios.get('/api/v1/cities');
+    // const availableCities = result.data.data;
   };
 
   handleSubmit = e => {
@@ -130,4 +141,4 @@ Filter.propTypes = {
   disabled: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
-export default WrappedRegistrationForm;
+export default graphql(getCities)(WrappedRegistrationForm);
