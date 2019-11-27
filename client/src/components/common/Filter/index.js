@@ -23,6 +23,8 @@ class Filter extends Component {
       data,
       data: { loading },
     } = this.props;
+    console.log(data);
+
     if (!loading) {
       // this.setState({ cities: availableCities });
     }

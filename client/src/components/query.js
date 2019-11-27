@@ -2,7 +2,7 @@ import { gql } from 'apollo-boost';
 
 const citiesQuery = gql`
   {
-    AllTherapists {
+    therapists {
       city
     }
   }
