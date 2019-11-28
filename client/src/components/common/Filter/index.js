@@ -21,14 +21,13 @@ class Filter extends Component {
   componentDidUpdate = async prevProps => {
     const { loading: prevLoading } = prevProps;
     const {
-      data: { therapists },
-      data: { loading },
+      data: { therapists, loading },
     } = this.props;
     const { citiesIsReseved } = this.state;
     try {
       if (!loading && prevLoading !== loading && !citiesIsReseved) {
         const availableCities = therapists.map(therapy => therapy.city);
-        this.setCitiesState(availableCities);
+        this.setCitiesState(availableCities, true);
       }
     } catch (error) {
       this.openNotificationWithIcon(
@@ -38,7 +37,8 @@ class Filter extends Component {
     }
   };
 
-  setCitiesState = cities => this.setState({ cities, citiesIsReseved: true });
+  setCitiesState = (cities, citiesIsReseved) =>
+    this.setState({ cities, citiesIsReseved });
 
   handleSubmit = e => {
     e.preventDefault();
