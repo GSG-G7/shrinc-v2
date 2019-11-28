@@ -2,6 +2,7 @@
 const { join } = require('path');
 
 const express = require('express');
+const cors = require('cors');
 const formData = require('express-form-data');
 const graphqlHTTP = require('express-graphql');
 require('dotenv').config();
@@ -13,6 +14,7 @@ const app = express();
 
 app.set('port', PORT);
 
+app.use(cors());
 app.use(express.json());
 app.use(formData.parse());
 app.use(express.urlencoded({ extended: false }));

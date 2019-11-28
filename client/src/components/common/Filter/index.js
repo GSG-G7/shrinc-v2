@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
+import { graphql } from 'react-apollo';
 import { Select, Form, Button, Switch, notification } from 'antd';
 
+import getCities from '../../queries';
 import Loader from '../Loader';
 import { types, ranges } from './staticData';
 import './style.css';
@@ -12,13 +15,30 @@ const { Option } = Select;
 class Filter extends Component {
   state = {
     cities: [],
+    citiesIsReseved: false,
   };
 
-  componentDidMount = async () => {
-    const result = await axios.get('/api/v1/cities');
-    const availableCities = result.data.data;
-    this.setState({ cities: availableCities });
+  componentDidUpdate = async prevProps => {
+    const { loading: prevLoading } = prevProps;
+    const {
+      data: { therapists, loading },
+    } = this.props;
+    const { citiesIsReseved } = this.state;
+    try {
+      if (!loading && prevLoading !== loading && !citiesIsReseved) {
+        const availableCities = therapists.map(therapy => therapy.city);
+        this.setCitiesState(availableCities, true);
+      }
+    } catch (error) {
+      this.openNotificationWithIcon(
+        error,
+        'Internal Server Error Try another time'
+      );
+    }
   };
+
+  setCitiesState = (cities, citiesIsReseved) =>
+    this.setState({ cities, citiesIsReseved });
 
   handleSubmit = e => {
     e.preventDefault();
@@ -31,14 +51,17 @@ class Filter extends Component {
       if (!err) {
         handleSubmit(data);
       } else {
-        this.openNotificationWithIcon(err);
+        this.openNotificationWithIcon(
+          err,
+          "can't make filter new try agian later"
+        );
       }
     });
   };
 
-  openNotificationWithIcon = e => {
+  openNotificationWithIcon = (e, message) => {
     notification.error({
-      message: "can't make filter new try agian later",
+      message,
       description: e.message,
       duration: 2,
     });
@@ -130,4 +153,4 @@ Filter.propTypes = {
   disabled: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
-export default WrappedRegistrationForm;
+export default graphql(getCities)(WrappedRegistrationForm);
