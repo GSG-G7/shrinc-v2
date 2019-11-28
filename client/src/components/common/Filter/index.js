@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { Select, Form, Button, Switch, notification } from 'antd';
 
-import getCities from '../../query';
+import getCities from '../../queries';
 import Loader from '../Loader';
 import { types, ranges } from './staticData';
 import './style.css';
@@ -15,23 +15,30 @@ const { Option } = Select;
 class Filter extends Component {
   state = {
     cities: [],
+    citiesIsReseved: false,
   };
 
-  componentDidMount = async () => {
-    // when data is reseved
+  componentDidUpdate = async prevProps => {
+    const { loading: prevLoading } = prevProps;
     const {
-      data,
+      data: { therapists },
       data: { loading },
     } = this.props;
-    console.log(data);
-
-    if (!loading) {
-      // this.setState({ cities: availableCities });
+    const { citiesIsReseved } = this.state;
+    try {
+      if (!loading && prevLoading !== loading && !citiesIsReseved) {
+        const availableCities = therapists.map(therapy => therapy.city);
+        this.setCitiesState(availableCities);
+      }
+    } catch (error) {
+      this.openNotificationWithIcon(
+        error,
+        'Internal Server Error Try another time'
+      );
     }
-    // will removed
-    // const result = await axios.get('/api/v1/cities');
-    // const availableCities = result.data.data;
   };
+
+  setCitiesState = cities => this.setState({ cities, citiesIsReseved: true });
 
   handleSubmit = e => {
     e.preventDefault();
@@ -44,14 +51,17 @@ class Filter extends Component {
       if (!err) {
         handleSubmit(data);
       } else {
-        this.openNotificationWithIcon(err);
+        this.openNotificationWithIcon(
+          err,
+          "can't make filter new try agian later"
+        );
       }
     });
   };
 
-  openNotificationWithIcon = e => {
+  openNotificationWithIcon = (e, message) => {
     notification.error({
-      message: "can't make filter new try agian later",
+      message,
       description: e.message,
       duration: 2,
     });
