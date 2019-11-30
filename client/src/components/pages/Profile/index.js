@@ -1,76 +1,45 @@
 import React, { Component, Fragment } from 'react';
-import { Icon, Avatar, notification } from 'antd';
+import { Icon, Avatar } from 'antd';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import { graphql } from 'react-apollo';
 import { Helmet } from 'react-helmet';
 
 import { AvailableityTime, Loader } from '../../common';
+import { therapistQuery } from '../../common/query';
 import fullTypeName from './staticData';
 import './style.css';
 
 class Profile extends Component {
-  state = {
-    fields: {},
-  };
-
-  async componentDidMount() {
-    const {
-      history: { push },
-    } = this.props;
-    try {
-      const {
-        match: {
-          params: { id },
-        },
-      } = this.props;
-
-      const profileData = await axios.get(`/api/v1/profile/${id}`);
-      const {
-        data: {
-          data: { fields },
-        },
-      } = profileData;
-
-      this.setState({ fields });
-    } catch ({ message }) {
-      const error500 = message.includes('500');
-      if (error500) {
-        notification.error({
-          message: 'Internal Server Error',
-          description: error500.message,
-          duration: 2,
-        });
-      } else {
-        push('/404');
-      }
-    }
-  }
-
   renderCompanies = data => data.map(item => <p key={item}>{item}</p>);
 
   render() {
     const {
-      fields,
-      fields: {
-        avalibility,
-        city,
-        email,
-        fullName,
-        image,
-        postCode,
-        priceRange,
-        remote,
-        skype,
-        insurance,
-        language,
-        approch,
-        type,
-      },
-    } = this.state;
+      data: { therapist, loading },
+    } = this.props;
+    if (loading) return <Loader />;
+    if (!Object.entries(therapist || {}).length) return <p>Nothing</p>;
 
-    return !Object.entries(fields).length ? (
-      <Loader />
-    ) : (
+    const {
+      data: {
+        therapist: {
+          avalibility,
+          city,
+          email,
+          fullName,
+          image,
+          postCode,
+          priceRange,
+          remote,
+          skype,
+          insurance,
+          language,
+          approch,
+          type,
+        },
+      },
+    } = this.props;
+
+    return (
       <section className="font">
         <Helmet>
           <title>Profile</title>
@@ -168,5 +137,31 @@ Profile.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.objectOf(PropTypes.string),
   }).isRequired,
+  data: PropTypes.shape({
+    therapist: PropTypes.shape({
+      avalibility: PropTypes.string,
+      city: PropTypes.string,
+      email: PropTypes.string,
+      fullName: PropTypes.string,
+      image: PropTypes.string,
+      postCode: PropTypes.string,
+      priceRange: PropTypes.string,
+      remote: PropTypes.string,
+      skype: PropTypes.string,
+      insurance: PropTypes.string,
+      language: PropTypes.string,
+      approch: PropTypes.string,
+      type: PropTypes.string,
+    }),
+    loading: PropTypes.bool.isRequired,
+  }).isRequired,
 };
-export default Profile;
+export default graphql(therapistQuery, {
+  options: props => {
+    return {
+      variables: {
+        id: props.match.params.id,
+      },
+    };
+  },
+})(Profile);

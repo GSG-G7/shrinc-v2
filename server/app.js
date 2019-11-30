@@ -4,6 +4,7 @@ const { join } = require('path');
 const express = require('express');
 const formData = require('express-form-data');
 const graphqlHTTP = require('express-graphql');
+const cors = require('cors');
 require('dotenv').config();
 
 const schema = require('./schema');
@@ -13,6 +14,7 @@ const app = express();
 
 app.set('port', PORT);
 
+app.use(cors());
 app.use(express.json());
 app.use(formData.parse());
 app.use(express.urlencoded({ extended: false }));
@@ -23,9 +25,9 @@ app.use('/shrinc', graphqlHTTP({
   graphiql: true,
 }));
 
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, '..', 'client', 'build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(join(__dirname, '..', 'client', 'build', 'index.html'));
+// });
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

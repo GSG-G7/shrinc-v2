@@ -11,4 +11,4 @@ mongodbConnection()
       // eslint-disable-next-line no-console
       console.log(`server is running at http://localhost:${port}`);
     });
-  });
+  }).catch((err) => console.log(err));
