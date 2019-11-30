@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
 import axios from 'axios';
+import PropTypes from 'prop-types';
+
 import { graphql } from 'react-apollo';
 import compose from 'lodash.flowright';
 
@@ -20,7 +22,7 @@ class Filter extends Component {
 
   componentDidMount = async () => {
     // const result = await axios.get('/api/v1/intial');
-    const { allTherapistsQuery: result, citiesQuery } = this.props;
+    const { allTherapistsQuery: result } = this.props;
     if (!result.loading) {
       const data = result.therapists || [];
       this.setState({ data });
@@ -68,6 +70,10 @@ class Filter extends Component {
     );
   }
 }
+
+Filter.propTypes = {
+  allTherapistsQuery: PropTypes.shape(PropTypes.string).isRequired,
+};
 
 export default compose(
   graphql(allTherapistsQuery, { name: 'allTherapistsQuery' }),

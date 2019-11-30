@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Select, Form, Button, Switch, notification } from 'antd';
-import { graphql } from 'react-apollo';
+// import { graphql } from 'react-apollo';
 
 // import { citiesQuery } from '../query';
 import Loader from '../Loader';
