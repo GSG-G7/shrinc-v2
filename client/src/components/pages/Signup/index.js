@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { graphql } from 'react-apollo';
 import {
   Form,
   Input,
@@ -11,11 +12,12 @@ import {
   Checkbox,
   notification,
 } from 'antd';
-import axios from 'axios';
 import Helmet from 'react-helmet';
+// import cloudinary from './cloudinary';
 
 import { Avalibility, Map, Loader } from '../../common';
 
+import addTherapist from './addTherapist';
 import staticData from './staticData';
 import './style.css';
 
@@ -44,28 +46,37 @@ class SignupForm extends Component {
     const { remote, available } = this.state;
     validateFieldsAndScroll(async (err, values) => {
       if (!err) {
-        const formData = new FormData();
+        this.setState({ loading: true });
+        const { mutate } = this.props;
         const data = { ...values };
         data.remote = remote;
-        const file = this.image.state.fileList[0].originFileObj;
-        formData.append('data', JSON.stringify(data));
-        formData.append('avalibility', JSON.stringify(available));
-        formData.append('image', file);
+        data.avalibility = JSON.stringify(available);
+        data.image =
+          'https://res.cloudinary.com/shrinc/image/upload/v1574600375/zz7muwhrwzm1cqibilfu.png';
         try {
-          this.setState({ loading: true });
-          const res = await axios.post('/api/v1/signup', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
+          mutate({
+            variables: {
+              fullName: data.fullName,
+              email: data.email,
+              password: data.password,
+              city: data.city,
+              postCode: data.postCode,
+              type: data.type,
+              priceRange: data.priceRange,
+              language: data.language,
+              insurance: data.insurance,
+              approch: data.approch,
+              avalibility: data.avalibility,
+              image: data.image,
+              remote: data.remote,
+              skype: data.skype,
             },
           });
           this.setState({ loading: false });
-          this.successNotification(res.data.message);
+          this.successNotification('successfull signup');
           setTimeout(() => push('/'), 2000);
         } catch (error) {
-          this.setState({ loading: false });
-          if (error.response.status === 400)
-            this.errorNotification(error.response.data.message);
-          else this.errorNotification('Server Error');
+          // console.log(error);
         }
       }
     });
@@ -355,7 +366,7 @@ class SignupForm extends Component {
             {getFieldDecorator('image', {
               rules: [
                 {
-                  required: true,
+                  // required: true,
                   message: 'Please upload your image!',
                 },
               ],
@@ -426,8 +437,9 @@ SignupForm.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  mutate: PropTypes.func.isRequired,
 };
 
 const Signup = Form.create({ name: 'Signup' })(SignupForm);
 
-export default Signup;
+export default graphql(addTherapist)(Signup);

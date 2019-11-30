@@ -4,6 +4,7 @@ const { join } = require('path');
 const express = require('express');
 const formData = require('express-form-data');
 const graphqlHTTP = require('express-graphql');
+const cors = require('cors');
 require('dotenv').config();
 
 const schema = require('./schema');
@@ -16,6 +17,7 @@ app.set('port', PORT);
 app.use(express.json());
 app.use(formData.parse());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 app.use(express.static(join(__dirname, '..', 'client', 'build')));
 app.use('/shrinc', graphqlHTTP({
