@@ -1,9 +1,11 @@
-const cloudinary = require('cloudinary').v2;
+import cloud from 'cloudinary';
+
+const cloudinary = cloud.v2;
 
 cloudinary.config({
-  cloud_name: process.env.Cloud_Name,
-  api_key: process.env.Cloudinary_KEY,
-  api_secret: process.env.Cloudinary_SECRET,
+  cloud_name: 'shrinc',
+  api_key: '192626321458792',
+  api_secret: '5AHnlIpew06zlKP_lS8MqGvJqBk',
 });
 
 module.exports = cloudinary;

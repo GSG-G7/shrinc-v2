@@ -6,7 +6,7 @@ import { ApolloProvider } from 'react-apollo';
 import App from './components/App';
 
 const client = new ApolloClient({
-  uri: 'https://localhost:5000/shrinc',
+  uri: 'http://localhost:5000/shrinc',
 });
 
 const ProviderSetUp = () => (

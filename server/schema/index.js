@@ -57,7 +57,7 @@ const Mutation = new GraphQLObjectType({
     addTherapist: {
       type: therapistType,
       args: {
-        id: { type: new GraphQLNonNull(GraphQLID) },
+        // id: { type: new GraphQLNonNull(GraphQLID) },
         fullName: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
