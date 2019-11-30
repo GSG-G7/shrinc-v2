@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Select, Form, Button, Switch, notification } from 'antd';
+import { graphql } from 'react-apollo';
 
+// import { citiesQuery } from '../query';
 import Loader from '../Loader';
 import { types, ranges } from './staticData';
 import './style.css';
@@ -11,14 +13,14 @@ const { Option } = Select;
 
 class Filter extends Component {
   state = {
-    cities: [],
+    cities: ['london'],
   };
 
-  componentDidMount = async () => {
-    const result = await axios.get('/api/v1/cities');
-    const availableCities = result.data.data;
-    this.setState({ cities: availableCities });
-  };
+  // componentDidMount = async () => {
+  //   const result = await axios.get('/api/v1/cities');
+  //   const availableCities = result.data.data;
+  //   this.setState({ cities: availableCities });
+  // };
 
   handleSubmit = e => {
     e.preventDefault();

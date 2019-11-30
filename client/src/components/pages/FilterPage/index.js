@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 
 import axios from 'axios';
+import { graphql } from 'react-apollo';
+import compose from 'lodash.flowright';
+
 import { notification } from 'antd';
 
 import { Card, FilterComponent, Loader } from '../../common';
+import { allTherapistsQuery, citiesQuery } from '../../common/query';
+
 import './style.css';
 
 class Filter extends Component {
@@ -14,8 +19,12 @@ class Filter extends Component {
   };
 
   componentDidMount = async () => {
-    const result = await axios.get('/api/v1/intial');
-    this.setState({ data: result.data.data });
+    // const result = await axios.get('/api/v1/intial');
+    const { allTherapistsQuery: result, citiesQuery } = this.props;
+    if (!result.loading) {
+      const data = result.therapists || [];
+      this.setState({ data });
+    }
   };
 
   openNotificationWithIcon = error => {
@@ -60,4 +69,7 @@ class Filter extends Component {
   }
 }
 
-export default Filter;
+export default compose(
+  graphql(allTherapistsQuery, { name: 'allTherapistsQuery' }),
+  graphql(citiesQuery, { name: 'citiesQuery' })
+)(Filter);
